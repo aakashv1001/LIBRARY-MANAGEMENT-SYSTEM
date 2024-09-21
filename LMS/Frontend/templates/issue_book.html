@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Book</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Issue Book</h1>
+
+        <!-- Display success or error messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Book and Member Information -->
+        <form method="POST">
+            {% csrf_token %}
+            <label for="book-title">Book Title:</label>  
+            <input type="text" id="book-title" value="{{ book.title }}" disabled>
+
+            <label for="member">Select Member:</label>
+            <select name="member_id" id="member" required>
+                <option value="">-- Select Member --</option>
+                {% for member in members %}
+                    <option value="{{ member.id }}" >{{ member.name }}</option>
+                {% endfor %}
+            </select>
+
+            
+            <button type="submit" class="btn btn-issue">Issue Book</button>
+        </form>
+    </div>
+</body>
+</html>
+
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea); /* Premium gradient background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 30px; /* Increased padding for a more spacious feel */
+    border-radius: 12px; /* Rounded corners for a softer look */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #343a40;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+input[type="text"], select {
+    padding: 12px; /* Increased padding for input fields */
+    font-size: 16px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px; /* Slightly larger border radius */
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s; /* Transition effect for focus */
+}
+
+input[type="text"]:focus, select:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
+}
+
+.btn {
+    padding: 12px; /* Increased button padding */
+    font-size: 16px;
+    border: none;
+    border-radius: 6px; /* Slightly larger border radius */
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    transition: background-color 0.3s, transform 0.3s; /* Added transition for button */
+}
+
+.btn-issue {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-issue:hover {
+    background-color: #218838;
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+/* Success/Error Messages */
+.messages {
+    margin-bottom: 15px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+</style>

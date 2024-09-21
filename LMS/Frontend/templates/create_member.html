@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Member</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Create New Member</h1>
+
+        <!-- Display success or error messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Member Creation Form -->
+        <form method="POST" action="{% url 'create_member' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Member Name:</label>
+                <input type="text" name="name" id="name" placeholder="Enter member name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" placeholder="Enter member email" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn">Create Member</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f2f1, #80cbc4); /* Premium gradient background */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto; /* Added margin for better vertical alignment */
+    padding: 30px; /* Increased padding for a spacious feel */
+    background-color: white;
+    border-radius: 12px; /* Softer rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow for depth */
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333; /* Darker text for better contrast */
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold; /* Bold labels for emphasis */
+    color: #495057; /* Softer color for labels */
+}
+
+input, select {
+    width: 100%;
+    padding: 12px; /* Increased padding for input fields */
+    margin-bottom: 15px;
+    border: 1px solid #ced4da; /* Slightly darker border */
+    border-radius: 6px; /* Slightly larger border radius */
+    box-sizing: border-box; /* Ensure padding and border are included in width */
+    transition: border-color 0.3s; /* Transition effect for focus */
+}
+
+input:focus, select:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
+}
+
+button {
+    width: 100%;
+    padding: 12px; /* Increased button padding */
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly larger border radius */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s; /* Added transition for button */
+}
+
+button:hover {
+    background-color: #4cae4c;
+    transform: translateY(-2px); /* Lift effect on hover */
+}
+
+</style>

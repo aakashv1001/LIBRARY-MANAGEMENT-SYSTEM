@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Library Book List</h1>
+        <!-- Search form -->
+        <form method="GET" action="{% url 'search_books' %}" class="search-form">
+            <input type="text" name="q" placeholder="Search books by title or author" value="{{ request.GET.q }}">
+            <button type="submit">Search</button>
+        </form>
+
+        <!-- Success/Error messages -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <a href="{% url 'create_book' %}">
+            <button class="btn">Add New Book</button>
+        </a>
+        <a href="{% url 'create_member' %}">
+            <button class="btn">Add New Member</button>
+        </a>
+        <a href="{% url 'member_list' %}">
+            <button class="btn">Members List</button>
+        </a>
+        <br><br>
+        <!-- Book List Table -->
+        <table class="book-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Publisher</th>
+                    <th>Page Count</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                    <th>Issue Book</th>
+                    <th>Transaction</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.authors }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.publisher }}</td>
+                    <td>{{ book.page_count }}</td>
+                    <td>{% if book.available%}
+                        Yes
+                        {% else %}
+                        No
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'update_book' book.id %}" class="btn">Edit</a>
+                        <a href="{% url 'delete_book' book.id %}" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
+
+                    <td>
+                        {% if book.available %}
+                            <a href="{% url 'issue_book' book.id %}" class="btn btn-issue">Issue Book</a>
+                        {% else %}
+                            <span class="unavailable">Not Available</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if book.transaction_set.exists and book.available == 0 %}
+                        
+                            <a href="{% url 'return_book' book.transaction_set.first.id %}" class="btn btn-return">Return Book</a>
+                        {% else %}
+                            <span>No active transactions</span>
+                        {% endif %}
+                    </td>
+                
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No books found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+<style>
+    /* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 50px;
+    background: white;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Heading */
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Search Form */
+.search-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-form input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    transition: border-color 0.3s;
+}
+
+.search-form input[type="text"]:focus {
+    border-color: #007bff;
+}
+
+.search-form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Messages */
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Table */
+.book-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Add some space above the table */
+}
+
+.book-table th, .book-table td {
+    border: 1px solid #ddd;
+    padding: 11px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.book-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.book-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.book-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Buttons */
+.btn {
+    text-decoration: none;
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    display: inline-block;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background-color: #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-issue {
+    background-color: #28a745;
+}
+
+.btn-issue:hover {
+    background-color: #218838;
+}
+
+.btn-return {
+    background-color: #ffc107;
+}
+
+.btn-return:hover {
+    background-color: #e0a800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-form input[type="text"], .search-form button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .book-table {
+        font-size: 14px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+</style>
